@@ -1,4 +1,4 @@
-# Airflow Embedded Dashboards
+# Airflow Embedash
 
 A Python package for embedding dashboards in Apache Airflow.
 

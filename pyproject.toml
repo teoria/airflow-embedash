@@ -1,0 +1,90 @@
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "airflow-embeded-dashboards"
+version = "0.1.0"
+description = "Add embeded dashboars to Airflow"
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.9"
+authors = [{ name = "Rodrigo Carneiro", email = "teoria@gmail.com" }]
+keywords = ["airflow", "apache-airflow", "metabase", "grafana", "datadog"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Web Environment",
+    "Framework :: Apache Airflow",
+    "Framework :: Apache Airflow :: Provider",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+
+
+[project.scripts]
+airflow-embeded-dashboards = "airflow_embeded_dashboards.main:main"
+
+
+[project.entry-points."airflow.plugins"]
+embeded = "airflow_embeded_dashboards.plugin:EmbededDashPlugin"
+
+
+-----------------
+
+[project]
+name = "airflow-embedash"
+version = "0.0.3"
+description = "Add embeded dashboars to Airflow"
+readme = "README.md"
+authors = [{ name = "Rodrigo Carneiro", email = "teoria@gmail.com" }]
+requires-python = ">=3.12"  
+dependencies = [
+    "duckdb>=1.2.2",
+    "numpy>=2.2.4",
+    "pyiceberg[duckdb,glue,pandas]>=0.9.0",
+]
+
+
+[[tool.uv.index]]
+name = "testpypi"
+url = "https://test.pypi.org/simple/"
+publish-url = "https://test.pypi.org/legacy/"
+explicit = true
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.5",
+    "ruff>=0.11.7",
+]
+
+[tool.pytest.ini_options]
+#addopts = "-n 8" # run tests in parallel, you can disable parallel test execution with "pytest -n0" command
+log_level = "INFO"
+#log_cli = "true" #  activate live logging, do not use with -n 8 xdist option for parallel test execution: https://github.com/pytest-dev/pytest-xdist/issues/402
+log_cli_level = "INFO"
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+extend-select = [
+    "I",   # re-order imports in alphabetic order
+]
+
+ 
+[project.entry-points."airflow.plugins"]
+airflow-embedash = "airflow_embedash.plugin:EmbededDashPlugin"
+
+ 
