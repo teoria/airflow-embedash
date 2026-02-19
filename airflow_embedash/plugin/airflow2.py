@@ -186,10 +186,16 @@ class EmbededView(AirflowBaseView):  # type: ignore
 
 embeded_view = EmbededView()
 
+from flask import Blueprint
+bp = Blueprint(
+    "test_plugin",
+    __name__,
+    template_folder="templates",   # registers airflow/plugins/templates as a Jinja template folder
+)
 
 class EmbededDashPlugin(AirflowPlugin):
     name = "embeded_dashboards"
-    flask_blueprints = [embeded_view.create_blueprint()]  # type: ignore[list-item]
+    flask_blueprints = [bp]  # type: ignore[list-item]
     def __init__(self) -> None:  
         embeded_view.plugin = self  # type: ignore[assignment]
         self.refresh_appbuilder_views()
