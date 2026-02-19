@@ -1,57 +1,13 @@
 
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
-[project]
-name = "airflow-embeded-dashboards"
-version = "0.1.0"
-description = "Add embeded dashboars to Airflow"
-readme = "README.md"
-license = "Apache-2.0"
-requires-python = ">=3.9"
-authors = [{ name = "Rodrigo Carneiro", email = "teoria@gmail.com" }]
-keywords = ["airflow", "apache-airflow", "metabase", "grafana", "datadog"]
-classifiers = [
-    "Development Status :: 5 - Production/Stable",
-    "Environment :: Web Environment",
-    "Framework :: Apache Airflow",
-    "Framework :: Apache Airflow :: Provider",
-    "Intended Audience :: Developers",
-    "License :: OSI Approved :: Apache Software License",
-    "Operating System :: OS Independent",
-    "Programming Language :: Python",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
-]
-
-
-[project.scripts]
-airflow-embeded-dashboards = "airflow_embeded_dashboards.main:main"
-
-
-[project.entry-points."airflow.plugins"]
-embeded = "airflow_embeded_dashboards.plugin:EmbededDashPlugin"
-
-
------------------
-
 [project]
 name = "airflow-embedash"
 version = "0.0.3"
 description = "Add embeded dashboars to Airflow"
 readme = "README.md"
 authors = [{ name = "Rodrigo Carneiro", email = "teoria@gmail.com" }]
-requires-python = ">=3.12"  
-dependencies = [
-    "duckdb>=1.2.2",
-    "numpy>=2.2.4",
-    "pyiceberg[duckdb,glue,pandas]>=0.9.0",
-]
-
+keywords = ["airflow", "apache-airflow", "metabase", "grafana", "datadog"]
+requires-python = ">=3.9"  
+ 
 
 [[tool.uv.index]]
 name = "testpypi"
