@@ -189,7 +189,7 @@ embeded_view = EmbededView()
 
 class EmbededDashPlugin(AirflowPlugin):
     name = "embeded_dashboards"
-
+    flask_blueprints = [embeded_view.create_blueprint()]  # type: ignore[list-item]
     def __init__(self) -> None:  
         embeded_view.plugin = self  # type: ignore[assignment]
         self.refresh_appbuilder_views()
