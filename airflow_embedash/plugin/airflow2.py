@@ -24,7 +24,7 @@ MENU_ACCESS_PERMISSIONS = [
 class EmbededView(AirflowBaseView):  # type: ignore
     default_view = "settings"
     route_base = "/embedash"
-    template_folder = op.join(op.dirname(__file__), "templates")
+    template_folder = "templates" #op.join(op.dirname(__file__), "templates")
     static_folder = op.join(op.dirname(__file__), "static")
 
     plugin = None  # type: ignore[assignment]
