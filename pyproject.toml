@@ -1,7 +1,7 @@
 
 [project]
 name = "airflow-embedash"
-version = "0.1.3"
+version = "0.1.4"
 description = "Add embeded dashboars to Airflow"
 readme = "README.md"
 authors = [{ name = "Rodrigo Carneiro", email = "teoria@gmail.com" }]
