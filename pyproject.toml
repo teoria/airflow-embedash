@@ -1,7 +1,7 @@
 
 [project]
 name = "airflow-embedash"
-version = "0.0.3"
+version = "0.1.0"
 description = "Add embeded dashboars to Airflow"
 readme = "README.md"
 authors = [{ name = "Rodrigo Carneiro", email = "teoria@gmail.com" }]
@@ -24,6 +24,21 @@ dev = [
     "pytest>=8.3.5",
     "ruff>=0.11.7",
 ]
+
+
+[project.urls]
+Homepage = "https://github.com/teoria/airflow-embedash"
+Documentation = "https://github.com/teoria/airflow-embedash"
+"Source code" = "https://github.com/teoria/airflow-embedash"
+
+[tool.hatch.version]
+path = "airflow_embedash/__init__.py"
+
+[tool.hatch.build.targets.sdist]
+include = ["/airflow_embedash"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["/airflow_embedash"]
 
 [tool.pytest.ini_options]
 #addopts = "-n 8" # run tests in parallel, you can disable parallel test execution with "pytest -n0" command
