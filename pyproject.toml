@@ -1,7 +1,7 @@
 
 [project]
 name = "airflow-embedash"
-version = "0.1.7"
+version = "0.1.8"
 description = "Add embeded dashboars to Airflow"
 readme = "README.md"
 authors = [{ name = "Rodrigo Carneiro", email = "teoria@gmail.com" }]
@@ -68,4 +68,5 @@ extend-select = [
 [project.entry-points."airflow.plugins"]
 airflow-embedash = "airflow_embedash.plugin:EmbededDashPlugin"
 
- 
+[tool.setuptools.package-data]
+airflow-embedash  = ["templates/*", "*.html"]

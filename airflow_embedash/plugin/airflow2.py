@@ -39,7 +39,9 @@ class EmbededView(AirflowBaseView):  # type: ignore
     @has_access(MENU_ACCESS_PERMISSIONS)  # type: ignore[untyped-decorator]
     def settings(self) -> Any:
         dashboards = Variable.get("embeded_dashboards", default_var=[], deserialize_json=True)
+ 
         return self.render_template("settings.html", dashboards=dashboards)  # type: ignore[no-any-return,no-untyped-call]     
+        # return self.render_template_string(template, dashboards=dashboards)  # type: ignore[no-any-return,no-untyped-call]     
 
     @expose("/add_dash", methods=['GET', 'POST'])  # type: ignore[untyped-decorator]
     @has_access(MENU_ACCESS_PERMISSIONS)  # type: ignore[untyped-decorator]
