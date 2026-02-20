@@ -69,4 +69,4 @@ extend-select = [
 airflow-embedash = "airflow_embedash.plugin:EmbededDashPlugin"
 
 [tool.setuptools.package-data]
-airflow_embedash = ["*.html"]
+airflow_embedash = ["plugin/templates/*.html"]
