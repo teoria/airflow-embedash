@@ -50,6 +50,10 @@ include = ["/airflow_embedash"]
 [tool.hatch.build.targets.wheel]
 packages = ["/airflow_embedash"]
 
+[tool.hatch.package-data]
+airflow_embedash = ["plugin/templates/*.html"]
+
+
 [tool.pytest.ini_options]
 #addopts = "-n 8" # run tests in parallel, you can disable parallel test execution with "pytest -n0" command
 log_level = "INFO"
@@ -67,6 +71,3 @@ extend-select = [
  
 [project.entry-points."airflow.plugins"]
 airflow-embedash = "airflow_embedash.plugin:EmbededDashPlugin"
-
-[tool.setuptools.package-data]
-airflow_embedash = ["plugin/templates/*.html"]
