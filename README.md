@@ -27,14 +27,17 @@ pip install -e .
 
 ### Basic Setup
 
-1. **Configure Metabase Settings**: Set the required environment variables or Airflow connections:
+1. **Configure Metabase Settings**: Set the required Airflow variables:
    - `embeded_dashboards_metabase_token`: Your Metabase API token for private dashboards 
 
 2. **Configure Menu Label**: 
    - Default menu label is "Dashboards"
    - Override by setting the `embeded_dashboards_menu_label` environment variable
  
-
+3. **Add new dashboards**
+   - Go to settings menu and add new dashboard
+   - Restart the service
+   
 ## Package Structure
 
 ```
