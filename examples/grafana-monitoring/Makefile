@@ -51,7 +51,7 @@ help:
 # locally, stored in ignored .env, and must never be used in a deployment.
 .PHONY: prepare
 prepare:
-	@test -f .env || (umask 077 && printf 'AIRFLOW__CORE__FERNET_KEY=%s\\n' "$$(openssl rand -base64 32 | tr '+/' '-_')" > .env)
+	@test -f .env || (umask 077 && printf 'AIRFLOW__CORE__FERNET_KEY=%s\n' "$$(openssl rand -base64 32 | tr '+/' '-_')" > .env)
 
 # Start all services
 .PHONY: up
