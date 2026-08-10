@@ -59,6 +59,17 @@ Open the nav entry, then **Add New Dashboard**. Four fields:
 **Public** (empty payload): the URL is embedded in an iframe unchanged. Works with any dashboard tool
 that allows framing — Grafana, Datadog, a public Metabase link.
 
+### Grafana monitoring example
+
+The runnable [Grafana monitoring example](examples/grafana-monitoring/README.md) starts Airflow,
+PostgreSQL and Grafana together. It provisions two dashboards that read Airflow metadata and shows
+how to add either Grafana URL through Embedash. The example includes Airflow 2 and Airflow 3 stacks,
+versioned panel SQL, and production guidance for using a read-only Grafana database role.
+
+Grafana URLs are public Embedash dashboards: leave **Payload** empty. Grafana must allow embedding
+from your Airflow origin, and Grafana authentication must be configured in Grafana itself. Do not put
+Grafana API keys in an Embedash URL.
+
 **Private** (payload set): Metabase signed embedding. The payload is the Metabase resource claim, for
 example:
 
