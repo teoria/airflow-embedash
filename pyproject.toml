@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "airflow-embedash"
-version = "0.2.0"
+version = "0.3.0"
 description = "Add embeded dashboars to Airflow"
 readme = "README.md"
 authors = [{ name = "Rodrigo Carneiro", email = "teoria@gmail.com" }]
@@ -13,7 +13,7 @@ requires-python = ">=3.9"
 dependencies = [
     "aenum",
     "attrs",
-    "apache-airflow>=2.9.0",
+    "apache-airflow>=2.8.0",
     "deprecation",  # Python 3.13 exposes a deprecated operator, we can remove this dependency in the future
     "Jinja2>=3.0.0",
     "msgpack",
