@@ -209,7 +209,7 @@ def build_external_views() -> list[dict[str, Any]]:
     """
     return [
         {
-            "name": Variable.get(MENU_LABEL_VAR, default_var="Dashboards"),
+            "name": Variable.get(MENU_LABEL_VAR, default_var="Embedash"),
             # The index page, not /settings: it forwards to whichever dashboard the
             # parent URL names, so a linked dashboard survives a reload.
             "href": f"{URL_PREFIX.lstrip('/')}/",
