@@ -1,0 +1,178 @@
+{
+  "annotations": {"list": []},
+  "editable": false,
+  "panels": [
+    {
+      "datasource": {"type": "postgres", "uid": "airflow-metadata"},
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "thresholds"},
+          "mappings": [],
+          "thresholds": {"mode": "absolute", "steps": [{"color": "#73BF69", "value": null}, {"color": "#8F3BB8", "value": 5}, {"color": "#F2495C", "value": 10}]},
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {"h": 7, "w": 6, "x": 0, "y": 0},
+      "id": 1,
+      "options": {
+        "reduceOptions": {"calculated": false, "calculation": "lastNotNull", "fields": "", "values": false},
+        "graphMode": "none",
+        "colorMode": "value",
+        "justifyMode": "center"
+      },
+      "targets": [{
+        "datasource": {"type": "postgres", "uid": "airflow-metadata"},
+        "format": "table",
+        "rawQuery": true,
+        "rawSql": "SELECT COUNT(*) AS value FROM dag WHERE is_paused = FALSE;",
+        "refId": "A"
+      }],
+      "title": "Active",
+      "type": "stat"
+    },
+    {
+      "datasource": {"type": "postgres", "uid": "airflow-metadata"},
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "thresholds"},
+          "mappings": [],
+          "thresholds": {"mode": "absolute", "steps": [{"color": "#73BF69", "value": null}, {"color": "#8F3BB8", "value": 1}, {"color": "#F2495C", "value": 5}]},
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {"h": 7, "w": 6, "x": 6, "y": 0},
+      "id": 2,
+      "options": {
+        "reduceOptions": {"calculated": false, "calculation": "lastNotNull", "fields": "", "values": false},
+        "graphMode": "none",
+        "colorMode": "value",
+        "justifyMode": "center"
+      },
+      "targets": [{
+        "datasource": {"type": "postgres", "uid": "airflow-metadata"},
+        "format": "table",
+        "rawQuery": true,
+        "rawSql": "SELECT COUNT(*) AS value FROM dag_run WHERE state = 'running';",
+        "refId": "A"
+      }],
+      "title": "Running",
+      "type": "stat"
+    },
+    {
+      "datasource": {"type": "postgres", "uid": "airflow-metadata"},
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "thresholds"},
+          "mappings": [],
+          "thresholds": {"mode": "absolute", "steps": [{"color": "#73BF69", "value": null}, {"color": "#8F3BB8", "value": 1}, {"color": "#F2495C", "value": 5}]},
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {"h": 7, "w": 6, "x": 12, "y": 0},
+      "id": 3,
+      "options": {
+        "reduceOptions": {"calculated": false, "calculation": "lastNotNull", "fields": "", "values": false},
+        "graphMode": "none",
+        "colorMode": "value",
+        "justifyMode": "center"
+      },
+      "targets": [{
+        "datasource": {"type": "postgres", "uid": "airflow-metadata"},
+        "format": "table",
+        "rawQuery": true,
+        "rawSql": "SELECT COUNT(*) AS value FROM dag_run WHERE state = 'failed' AND $__timeFilter(COALESCE(start_date, logical_date));",
+        "refId": "A"
+      }],
+      "title": "Failed",
+      "type": "stat"
+    },
+    {
+      "datasource": {"type": "postgres", "uid": "airflow-metadata"},
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "thresholds"},
+          "mappings": [],
+          "thresholds": {"mode": "absolute", "steps": [{"color": "#73BF69", "value": null}, {"color": "#8F3BB8", "value": 1}, {"color": "#F2495C", "value": 5}]},
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {"h": 7, "w": 6, "x": 18, "y": 0},
+      "id": 4,
+      "options": {
+        "reduceOptions": {"calculated": false, "calculation": "lastNotNull", "fields": "", "values": false},
+        "graphMode": "none",
+        "colorMode": "value",
+        "justifyMode": "center"
+      },
+      "targets": [{
+        "datasource": {"type": "postgres", "uid": "airflow-metadata"},
+        "format": "table",
+        "rawQuery": true,
+        "rawSql": "SELECT COUNT(*) AS value FROM dag_run WHERE state = 'success' AND $__timeFilter(COALESCE(start_date, logical_date));",
+        "refId": "A"
+      }],
+      "title": "Succeeded",
+      "type": "stat"
+    },
+    {
+      "datasource": {"type": "postgres", "uid": "airflow-metadata"},
+      "fieldConfig": {"defaults": {"unit": "short"}, "overrides": []},
+      "gridPos": {"h": 9, "w": 12, "x": 0, "y": 7},
+      "id": 5,
+      "options": {"legend": {"displayMode": "list", "placement": "bottom"}, "tooltip": {"mode": "single"}},
+      "targets": [{
+        "datasource": {"type": "postgres", "uid": "airflow-metadata"},
+        "format": "time_series",
+        "rawQuery": true,
+        "rawSql": "SELECT COALESCE(start_date, logical_date) AS \"time\", state AS metric, COUNT(*) AS value FROM dag_run WHERE $__timeFilter(COALESCE(start_date, logical_date)) GROUP BY 1, 2 ORDER BY 1, 2;",
+        "refId": "A"
+      }],
+      "title": "Run state trend",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {"type": "postgres", "uid": "airflow-metadata"},
+      "fieldConfig": {"defaults": {"unit": "s"}, "overrides": []},
+      "gridPos": {"h": 9, "w": 12, "x": 12, "y": 7},
+      "id": 6,
+      "options": {"legend": {"displayMode": "list", "placement": "bottom"}, "tooltip": {"mode": "single"}},
+      "targets": [{
+        "datasource": {"type": "postgres", "uid": "airflow-metadata"},
+        "format": "time_series",
+        "rawQuery": true,
+        "rawSql": "SELECT COALESCE(start_date, logical_date) AS \"time\", dag_id AS metric, EXTRACT(EPOCH FROM (COALESCE(end_date, now()) - start_date)) AS value FROM dag_run WHERE start_date IS NOT NULL AND $__timeFilter(COALESCE(start_date, logical_date)) ORDER BY 1;",
+        "refId": "A"
+      }],
+      "title": "DAG runtime by DAG",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {"type": "postgres", "uid": "airflow-metadata"},
+      "fieldConfig": {"defaults": {}, "overrides": []},
+      "gridPos": {"h": 10, "w": 24, "x": 0, "y": 16},
+      "id": 7,
+      "options": {"showHeader": true},
+      "targets": [{
+        "datasource": {"type": "postgres", "uid": "airflow-metadata"},
+        "format": "table",
+        "rawQuery": true,
+        "rawSql": "WITH latest_run AS (SELECT DISTINCT ON (dag_id) dag_id, run_id, logical_date, start_date, end_date, state FROM dag_run ORDER BY dag_id, COALESCE(start_date, queued_at, logical_date) DESC) SELECT lr.dag_id AS \"DAG\", lr.run_id AS \"Run ID\", lr.logical_date AS \"Logical date\", lr.state AS \"Run state\", COUNT(ti.*) AS \"Tasks\", COUNT(ti.*) FILTER (WHERE ti.state = 'success') AS \"Success\", COUNT(ti.*) FILTER (WHERE ti.state = 'failed') AS \"Failed\", ROUND(100.0 * COUNT(ti.*) FILTER (WHERE ti.state IN ('success', 'skipped')) / NULLIF(COUNT(ti.*), 0), 1) AS \"Completion %\" FROM latest_run lr LEFT JOIN task_instance ti ON ti.dag_id = lr.dag_id AND ti.run_id = lr.run_id GROUP BY lr.dag_id, lr.run_id, lr.logical_date, lr.start_date, lr.end_date, lr.state;",
+        "refId": "A"
+      }],
+      "title": "Latest DAG runs",
+      "type": "table"
+    }
+  ],
+  "schemaVersion": 41,
+  "tags": ["airflow", "embedash"],
+  "templating": {"list": []},
+  "time": {"from": "now-6h", "to": "now"},
+  "title": "Airflow observability overview",
+  "uid": "airflow-embedash-demo",
+  "version": 2
+}
+
