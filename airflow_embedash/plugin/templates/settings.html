@@ -41,15 +41,15 @@
                             title="" aria-label="Edit Dashboard" 
                             class="btn btn-sm btn-default btn-icon-only" 
                             data-original-title="Edit&nbsp;Dashboard">
-                                <span class="fa-solid fa-pen" aria-hidden="true"></span>
+                                <span class="fa-solid fa-pen" aria-hidden="true"></span> Edit
                             </a>
                              
-                            <a href="./deletedashboard/{{ dashboard.id }}" 
-                             onclick="return confirmDeleteDag(this, 'conditional_dataset_and_time_based_timetable')" 
-                             title="" aria-label="Delete Dashboard" 
+                            <a href="./deletedashboard/{{ dashboard.id }}"
+                             data-confirm-delete="{{ dashboard.name }}"
+                             title="" aria-label="Delete Dashboard"
                              class="btn btn-sm btn-default btn-icon-only" 
                              data-original-title="Delete&nbsp;Dashboard">
-                                <span class="material-icons text-danger" aria-hidden="true">delete_outline</span>
+                                <span class="material-icons text-danger" aria-hidden="true">delete_outline</span> <span class="text-danger">Delete</span>
                             </a>
 
                             
@@ -67,12 +67,42 @@
         </div>
     </div>
 </div>
+<dialog id="deleteDialog">
+    <form method="dialog">
+        <p>Delete <strong id="deleteTarget"></strong>?</p>
+        <button class="btn" value="cancel">Cancel</button>
+        <button class="btn btn-danger" value="delete">Delete</button>
+    </form>
+</dialog>
 <script>
-    function confirmDeleteDag(link, dagId) {
-        if (confirm("Are you sure you want to delete this dashboard?")) {
-            return true;
-        }
-        return false;
+    if (window.embedashSyncUrl) {
+        window.embedashSyncUrl('');
     }
+
+    /*
+        Airflow 3 renders plugin views in an iframe sandboxed with
+        "allow-scripts allow-same-origin allow-forms" -- no allow-modals -- so
+        window.confirm() returns false without prompting and swallows the click.
+        <dialog> is not covered by that restriction and works in Airflow 2 as well.
+    */
+    var dialog = document.getElementById('deleteDialog');
+    var target = document.getElementById('deleteTarget');
+    var pendingUrl = null;
+
+    document.querySelectorAll('a[data-confirm-delete]').forEach(function (link) {
+        link.addEventListener('click', function (event) {
+            event.preventDefault();
+            pendingUrl = link.href;
+            target.textContent = link.getAttribute('data-confirm-delete');
+            dialog.showModal();
+        });
+    });
+
+    dialog.addEventListener('close', function () {
+        if (dialog.returnValue === 'delete' && pendingUrl) {
+            window.location.assign(pendingUrl);
+        }
+        pendingUrl = null;
+    });
 </script>
 {% endblock %}

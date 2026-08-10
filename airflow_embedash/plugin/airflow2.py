@@ -195,7 +195,7 @@ bp = Blueprint(
     template_folder="templates",   # registers airflow/plugins/templates as a Jinja template folder
 )
 
-class EmbededDashPlugin(AirflowPlugin):
+class EmbededDashAF2Plugin(AirflowPlugin):
     name = "embeded_dashboards"
     flask_blueprints = [bp]  # type: ignore[list-item]
     def __init__(self) -> None:  

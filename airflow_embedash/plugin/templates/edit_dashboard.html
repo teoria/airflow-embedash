@@ -9,13 +9,13 @@
             
             <!-- Back to Dashboards Button -->
             <div class="pull-right">
-                <a href="./settings" class="btn btn-secondary">
+                <a href="../settings" class="btn btn-secondary">
                     <i class="fa fa-arrow-left"></i> Back to Dashboards
                 </a>
             </div>
         <br><br>
             <!-- Add Dashboard Form -->
-            <form method="POST" action="{{ url_for('EmbededView.DashboardSettings_edit_dash', id=dashboard.id) }}" class="form-horizontal">
+            <form method="POST" action="../edit_dash/{{ dashboard.id }}" class="form-horizontal">
                 <div class="form-group">
                     <label for="name" class="col-sm-2 control-label">Dashboard Name</label>
                     <div class="col-sm-10">
@@ -54,4 +54,9 @@
         </div>
     </div>
 </div>
+<script>
+    if (window.embedashSyncUrl) {
+        window.embedashSyncUrl('/edit/{{ dashboard.id }}');
+    }
+</script>
 {% endblock %}

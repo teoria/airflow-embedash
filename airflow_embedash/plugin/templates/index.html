@@ -1,0 +1,14 @@
+{% extends base_template %}
+{% block page_title %}Embedash{% endblock %}
+
+{% block content %}
+<script>
+    /*
+        The Airflow UI always frames this plugin at its registered href, so which page is
+        open lives in the parent URL (/plugin/<route><suffix>). This entry page reads that
+        suffix back out and forwards, which is what makes those URLs reloadable and
+        shareable. embedashPageFor() in the base template owns the mapping.
+    */
+    window.location.replace(embedashPageFor(embedashParentSuffix() || ''));
+</script>
+{% endblock %}

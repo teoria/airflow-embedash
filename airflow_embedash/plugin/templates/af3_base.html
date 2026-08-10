@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block page_title %}Embedash{% endblock %}</title>
+  <style>
+    /* Airflow 3 renders external views in an iframe with no CSS of its own, so the
+       handful of Bootstrap classes the shared templates use are defined here. */
+    :root {
+      --fg: #1a202c; --bg: #fff; --muted: #718096; --border: #e2e8f0;
+      --accent: #017cee; --accent-fg: #fff; --stripe: #f7fafc;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --fg: #e2e8f0; --bg: #1a202c; --muted: #a0aec0; --border: #2d3748;
+        --accent: #4299e1; --accent-fg: #10151f; --stripe: #222b3a;
+      }
+    }
+    body {
+      margin: 0; padding: 16px; background: var(--bg); color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-size: 14px; line-height: 1.5;
+    }
+    h2 { margin: 0 0 8px; font-size: 20px; }
+    a { color: var(--accent); }
+    .row { display: flow-root; }
+    .pull-right { float: right; }
+    .text-center { text-align: center; }
+    .text-danger { color: #e53e3e; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 8px; text-align: left; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    .table-striped tbody tr:nth-child(odd) { background: var(--stripe); }
+    td a[href] { word-break: break-all; }
+    .btn {
+      display: inline-block; padding: 6px 12px; border: 1px solid var(--border); border-radius: 4px;
+      background: var(--bg); color: var(--fg); text-decoration: none; cursor: pointer; font-size: 14px;
+    }
+    .btn-primary { background: var(--accent); border-color: var(--accent); color: var(--accent-fg); }
+    .btn-danger { background: #c53030; border-color: #c53030; color: #fff; }
+    .btn-sm { padding: 3px 8px; font-size: 13px; }
+    dialog {
+      padding: 20px; border: 1px solid var(--border); border-radius: 6px;
+      background: var(--bg); color: var(--fg); box-shadow: 0 8px 24px rgb(0 0 0 / 0.25);
+    }
+    dialog::backdrop { background: rgb(0 0 0 / 0.5); }
+    dialog form { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    dialog p { flex: 1 0 100%; margin: 0 0 8px; }
+    .form-group { margin-bottom: 12px; }
+    .control-label { display: block; font-weight: 600; margin-bottom: 4px; }
+    .form-control {
+      width: 100%; max-width: 640px; padding: 6px 8px; box-sizing: border-box; font: inherit;
+      background: var(--bg); color: var(--fg); border: 1px solid var(--border); border-radius: 4px;
+    }
+    .label {
+      display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 12px;
+      background: var(--stripe); border: 1px solid var(--border);
+    }
+    /* Font Awesome / Material icon fonts are not loaded here -- hide the glyph spans
+       so only the text label of each button shows. */
+    .fa, .fa-solid, [class^="fa-"], .material-icons { display: none; }
+  </style>
+  <script>
+    /*
+        Airflow frames plugin pages, so the address bar belongs to the parent document and
+        is the only record of which page is framed. A page calls this to declare itself as
+        /plugin/<route><suffix>: the address bar is put in step (so the page can be linked
+        and reloaded, via the plugin index page) and then followed if it changes, because
+        the Airflow nav navigates the parent without ever reloading the iframe.
+
+        Defined only in the Airflow 3 base template -- in Airflow 2 these pages own the
+        address bar already, and the callers guard on this being undefined. Pages that are
+        not addressable (the add and edit forms) simply do not call it.
+    */
+    var embedashAppRoot = {{ request.scope.get("root_path", "") | tojson }};
+
+    function embedashParentPath() {
+      try {
+        return window.parent.location.pathname;
+      } catch (error) {
+        return null; // parent unreachable: leave the address bar alone
+      }
+    }
+
+    // The suffix a page declares, as it appears after /plugin/<route> in the parent URL.
+    function embedashParentSuffix() {
+      var path = embedashParentPath();
+      var match = path === null ? null : path.match(/^.*\/plugin\/[^/]+(.*)$/);
+      return match ? match[1] : null;
+    }
+
+    // The one place suffixes map back to pages: used both by index.html on a fresh load
+    // and by the watcher below when the parent URL changes under a live page.
+    function embedashPageFor(suffix) {
+      var routes = [
+        [/^\/view\/([A-Za-z0-9_-]+)$/, "/view/"],
+        [/^\/edit\/([A-Za-z0-9_-]+)$/, "/editdashboard/"],
+        [/^\/add$/, "/adddashboard"],
+      ];
+      for (var i = 0; i < routes.length; i++) {
+        var match = suffix.match(routes[i][0]);
+        if (match) {
+          return embedashAppRoot + routes[i][1] + (match[1] || "");
+        }
+      }
+      return embedashAppRoot + "/settings";
+    }
+
+    window.embedashSyncUrl = function (suffix) {
+      if (window.parent === window) {
+        return;
+      }
+      var parentPath = embedashParentPath();
+      var route = parentPath === null ? null : parentPath.match(/^.*\/plugin\/[^/]+/);
+      if (!route) {
+        return;
+      }
+      var own = route[0] + suffix;
+      if (parentPath !== own) {
+        window.parent.history.replaceState(null, "", own);
+      }
+
+      // ponytail: 400ms poll. React Router navigates with pushState, which fires no event
+      // a framed document can observe; swap for the Navigation API once every browser
+      // Airflow supports has it.
+      window.setInterval(function () {
+        var current = embedashParentPath();
+        if (current === null || current === own) {
+          return;
+        }
+        window.location.replace(embedashPageFor(embedashParentSuffix() || ""));
+      }, 400);
+    };
+  </script>
+</head>
+<body>
+{% block content %}{% endblock %}
+</body>
+</html>
