@@ -83,7 +83,8 @@ The two stacks differ in ways worth knowing:
 Airflow 2 has no simple auth manager, so its init container seeds a fixed
 `admin` / `admin` account. Both stacks are local-only and deliberately
 unauthenticated or trivially authenticated — do not copy these settings into a
-deployed environment.
+deployed environment. This includes the fixed Fernet key used only to let every
+demo container decrypt the same seeded Airflow Variables.
 
 ### Embedash source
 

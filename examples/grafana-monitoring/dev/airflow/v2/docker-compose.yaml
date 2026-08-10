@@ -1,6 +1,8 @@
 name: airflow-embedash-demo
 
 x-airflow-common: &airflow-common
+  env_file:
+    - ../../../.env
   build:
     context: ../../../../..
     dockerfile: examples/grafana-monitoring/dev/airflow/v2/Dockerfile

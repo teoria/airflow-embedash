@@ -44,10 +44,18 @@ help:
 	@echo "  dag-info      - Show DAG info"
 	@echo "  airflow-help  - Show airflow command help"
 	@echo "  plugin-info   - Show plugin info"
+	@echo "  prepare       - Create the local demo encryption key if needed"
+
+# Airflow encrypts Variables. All demo containers need the same Fernet key to
+# read the dashboard configuration seeded by airflow-init. The key is generated
+# locally, stored in ignored .env, and must never be used in a deployment.
+.PHONY: prepare
+prepare:
+	@test -f .env || (umask 077 && printf 'AIRFLOW__CORE__FERNET_KEY=%s\\n' "$$(openssl rand -base64 32 | tr '+/' '-_')" > .env)
 
 # Start all services
 .PHONY: up
-up:
+up: prepare
 	$(DOCKER_COMPOSE) up -d
 
 # Stop and remove containers
@@ -92,7 +100,7 @@ test:
 
 # Build the development environment
 .PHONY: build
-build:
+build: prepare
 	$(DOCKER_COMPOSE) build
 
 # Wait for services to be ready
@@ -161,4 +169,3 @@ plugin-info:
 
 # Default target when running make without arguments
 .DEFAULT_GOAL := help
-
