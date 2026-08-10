@@ -13,6 +13,7 @@ x-airflow-common: &airflow-common
     AIRFLOW__API_AUTH__JWT_SECRET: local-demo-not-for-production
   volumes:
     - ../../dags:/opt/airflow/dags:ro
+    - ../../seed_embedash.py:/opt/airflow/seed_embedash.py:ro
     - airflow-logs:/opt/airflow/logs
   depends_on:
     postgres:
@@ -35,7 +36,12 @@ services:
 
   airflow-init:
     <<: *airflow-common
-    command: db migrate
+    entrypoint: /bin/bash
+    command:
+      - -c
+      - >-
+        airflow db migrate &&
+        python /opt/airflow/seed_embedash.py
     restart: "no"
 
   airflow-api-server:

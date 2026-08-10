@@ -41,16 +41,18 @@ make open         # print the UI URLs
 The demo DAG runs every two minutes. Give it a few minutes before the dashboard
 panels have something to show, or force a run now with `make trigger-dag`.
 
-Then open **Dashboards** in the Airflow navigation and select **Add New
-Dashboard**. Add either provisioned Grafana dashboard:
+The init container automatically adds both provisioned Grafana dashboards to
+Embedash. Open **Dashboards** in the Airflow navigation and select either:
 
 | Name | URL |
 | --- | --- |
 | Airflow pipeline health | `http://localhost:3000/d/airflow-embedash-demo/airflow-pipeline-health?orgId=1&kiosk` |
 | Airflow DAG runtime | `http://localhost:3000/d/airflow-dag-runtime/airflow-dag-runtime?orgId=1&kiosk` |
 
-Leave **Payload** empty. Embedash stores the dashboard in its Airflow Variable
-after you save it; no environment variable or Airflow restart is needed.
+The seeded entries have an empty **Payload**, so Embedash embeds the public
+Grafana URLs as-is. The seed only runs when the `embeded_dashboards` Airflow
+Variable does not already exist; it will never overwrite dashboards you add or
+edit locally.
 
 Tear down with `make down`, or `make clean` to also drop the volumes.
 
@@ -94,10 +96,10 @@ make build
 
 ## Configuring dashboards
 
-Use the Embedash **Dashboards** entry in the Airflow navigation, then select
-**Add New Dashboard**. Give the entry a name, paste one of the Grafana URLs
-from the quick start, and leave **Payload** empty. This is the same workflow on
-Airflow 2 and Airflow 3.
+The two demo dashboards are seeded during initialization. To add another
+dashboard, use the Embedash **Dashboards** entry in the Airflow navigation,
+select **Add New Dashboard**, and leave **Payload** empty for Grafana URLs.
+This is the same workflow on Airflow 2 and Airflow 3.
 
 The URL is loaded by the browser, not by Airflow, so it must be reachable from
 the browser and Grafana must permit framing by the Airflow origin. Never put a

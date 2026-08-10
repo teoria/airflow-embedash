@@ -10,6 +10,7 @@ x-airflow-common: &airflow-common
     AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
   volumes:
     - ../../dags:/opt/airflow/dags:ro
+    - ../../seed_embedash.py:/opt/airflow/seed_embedash.py:ro
     - airflow-logs:/opt/airflow/logs
   depends_on:
     postgres:
@@ -40,7 +41,8 @@ services:
       - >-
         airflow db migrate &&
         airflow users create -r Admin -u admin -p admin
-        -e admin@example.com -f Local -l Admin
+        -e admin@example.com -f Local -l Admin &&
+        python /opt/airflow/seed_embedash.py
     restart: "no"
 
   airflow-webserver:
